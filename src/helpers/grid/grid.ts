@@ -1,4 +1,4 @@
-import {ColumnIsSameValue, DiagonalIsSameValue, GridCellValue, RowIsSameValue} from "./types";
+import { ColumnIsSameValue, DiagonalIsSameValue, GridCellValue, RowIsSameValue } from "./types";
 
 export const createGrid = (args: {
     size: number;
@@ -9,7 +9,10 @@ export const createGrid = (args: {
 
 export const setGridCellValue = (args: GridCellValue) => {
     const { grid, x, y, value } = args;
-    grid[y][x] = value;
+    const newGrid = [...grid]; // Create a new copy of the grid array
+    newGrid[y] = [...newGrid[y]]; // Create a new copy of the row array
+    newGrid[y][x] = value;
+    return newGrid;
 };
 
 export const checkRowIsSameValue = (args: RowIsSameValue) => {
