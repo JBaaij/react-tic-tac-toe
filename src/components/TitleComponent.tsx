@@ -4,8 +4,6 @@ interface TitleComponentProps {
 
 const TitleComponent = (props: TitleComponentProps) => {
     const { title } = props;
-    console.log("TitleComponent: title = ", title);
-
     return (
         <div>
             <h1>{title}</h1>

@@ -1,0 +1,13 @@
+.label-button {
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    background-color: #61dafb;
+}
+
+.label-button-pink {
+    background-color: #ff00ff;
+}
