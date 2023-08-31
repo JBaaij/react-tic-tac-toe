@@ -131,6 +131,9 @@ label {
   background: rgb(129, 224, 219);
 }
 
+.gotohigh:hover {
+  background: rgb(223, 202, 132);
+}
 .contgrid {
   display: grid;
   grid-template-rows: repeat(5, 15vh);

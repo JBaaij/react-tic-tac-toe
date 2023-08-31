@@ -1,5 +1,10 @@
 import TitleComponent from '../components/TitleComponent';
 import './HighScoreScreen.css';
+import LabelButton from '../components/LabelButton';
+
+const onNavigateGoToStartScreen = () => {
+  navigate('/');
+};
 
 const HighScoreScreen = () => {
   const onClick = () => {
@@ -28,13 +33,17 @@ const HighScoreScreen = () => {
         <div id="gridl8" className="gridl-item"></div>
         <div id="gridl9" className="gridl-item"></div>
         <div id="gridl10" className="gridl-item"></div>
-        <button className="gridl-item" id="deleteScores">
-          <h3>Delete High Scores</h3>
-        </button>
 
-        <button className="gridl-item" id="start">
-          <h3>Go to Start</h3>
-        </button>
+        <LabelButton
+          label={'Delete Highscores'}
+          onClick={onNavigateGoToStartScreen}
+          className="vscpu"
+        />
+        <LabelButton
+          label={'Go to Start'}
+          onClick={onNavigateGoToStartScreen}
+          className="vsplayer"
+        />
       </div>
     </div>
   );
