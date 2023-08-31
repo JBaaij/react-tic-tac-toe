@@ -24,6 +24,7 @@ body {
 
 .box1 {
   margin-bottom: 2rem;
+  display: flex;
 }
 .icon-x1 {
   width: 1.5rem;

@@ -13,6 +13,7 @@ describe('Grid functions', () => {
     beforeEach(() => {
         // Initialize the grid before each test
         grid = createGrid({ size: 3 });
+        console.log({grid});
     });
 
     describe('setGridCellValue', () => {

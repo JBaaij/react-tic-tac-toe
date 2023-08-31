@@ -1,8 +1,11 @@
 import { ColumnIsSameValue, DiagonalIsSameValue, GridCellValue, RowIsSameValue } from "./types";
 
-export const createGrid = (args: {
+interface GridArguments {
     size: number;
-}) => {
+}
+
+export const createGrid = (args: GridArguments) => {
+    //{ size: 3 }
     const { size } = args;
     return Array.from(Array(size), () => new Array(size).fill(0));
 };
