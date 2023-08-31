@@ -8,6 +8,7 @@
   align-content: flex-start;
   margin-bottom: 8rem;
 }
+
 .gridl-item {
   background: rgb(70, 65, 65);
   width: 300px;
@@ -18,32 +19,32 @@
   justify-content: center;
   color: white;
 }
-#texta {
+
+.gridl-item-yellow {
   background: rgb(237, 184, 9);
   color: black;
 }
-#textb {
+
+.gridl-item-blue {
   background: rgb(10, 220, 210);
   color: black;
 }
-#textc {
-  background: rgb(10, 220, 210);
-  color: black;
-}
-#deleteScores {
+
+.deleteScores {
   background: rgb(237, 184, 9);
   color: black;
   border-radius: 5px;
 }
-#start {
+
+.start {
   background: rgb(10, 220, 210);
   color: black;
   border-radius: 5px;
 }
 
-#deleteScores:hover {
+.deleteScores:hover {
   background: rgb(223, 202, 132);
 }
-#start:hover {
+.start:hover {
   background: rgb(129, 224, 219);
 }

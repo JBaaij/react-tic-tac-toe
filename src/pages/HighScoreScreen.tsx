@@ -1,26 +1,26 @@
 import TitleComponent from '../components/TitleComponent';
 import './HighScoreScreen.css';
 import LabelButton from '../components/LabelButton';
-
-const onNavigateGoToStartScreen = () => {
-  navigate('/');
-};
+import {useNavigate} from "react-router-dom";
 
 const HighScoreScreen = () => {
-  const onClick = () => {
-    console.log('Game screen');
+  const navigate = useNavigate();
+  const onNavigateGoToStartScreen = () => {
+    navigate('/');
   };
+
   return (
     <div>
       <TitleComponent title={'High scores screen'} />
+
       <div id="highscore3" className="contgridl">
-        <div id="texta" className="gridl-item">
+        <div className="gridl-item-yellow gridl-item">
           High Scores
         </div>
-        <div id="textb" className="gridl-item">
+        <div className="gridl-item-blue gridl-item">
           Ranking - - Name - - Points
         </div>
-        <div id="textc" className="gridl-item">
+        <div className="gridl-item-blue gridl-item">
           Win: 2 points - - Draw: 1 point
         </div>
         <div id="gridl1" className="gridl-item"></div>

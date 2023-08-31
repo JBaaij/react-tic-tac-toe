@@ -1,46 +1,36 @@
-import TitleComponent from '../components/TitleComponent';
-import LabelButton from '../components/LabelButton';
+import {createGrid, setGridCellValue} from "../helpers/grid/grid";
+import {useCallback, useEffect, useState} from "react";
+import GridItem from "../components/game/GridItem";
+import {GridCellValue} from "../helpers/grid/types";
 
 const GameScreen = () => {
-  const onClick = () => {
-    console.log('Game screen');
-  };
-  return (
-    <div className="contgrid">
-      <div id="itema" className="grid-upper">
-        <img
-          className="icon-x3"
-          src="../pages/assets/icon-x.svg"
-          alt="icon-x"
-        />
-        <img
-          className="icon-o3"
-          src="../pages/assets/icon-o.svg"
-          alt="icon-o"
-        />
-      </div>
-      <div id="itemb" className="grid-upper"></div>
-      <div id="itemc" className="grid-upper">
-        <img
-          id="icon-restart"
-          src="../pages/assets/icon-restart.svg"
-          alt="icon-xrestart"
-        />
-      </div>
-      <div id="item1" className="grid-item"></div>
-      <div id="item2" className="grid-item"></div>
-      <div id="item3" className="grid-item"></div>
-      <div id="item4" className="grid-item"></div>
-      <div id="item5" className="grid-item"></div>
-      <div id="item6" className="grid-item"></div>
-      <div id="item7" className="grid-item"></div>
-      <div id="item8" className="grid-item"></div>
-      <div id="item9" className="grid-item"></div>
-      <div id="itemd" className="grid-under"></div>
-      <div id="iteme" className="grid-under"></div>
-      <div id="itemf" className="grid-under"></div>
-    </div>
-  );
+    // set ik local state met initial state van createGrid
+    const [grid, setGrid] = useState(createGrid({ size: 3 }));
+
+    useEffect(() => {
+        console.log({grid})
+    }, [grid]);
+
+    const onGridItemClick = useCallback((value: GridCellValue) => {
+        const newGrid = setGridCellValue({...value, value: 1});
+        setGrid(newGrid);
+    }, [grid]);
+
+    return (
+        <div className="contgrid">
+            {grid.map((row, rowIndex) => {
+                return row.map((cell, cellIndex) => {
+                    const gridValue: GridCellValue = {
+                        grid,
+                        x: cellIndex,
+                        y: rowIndex,
+                        value: grid[rowIndex][cellIndex],
+                    };
+                    return <GridItem onClick={onGridItemClick} value={gridValue} key={cellIndex}/>
+                });
+            })}
+        </div>
+    );
 };
 
 export default GameScreen;

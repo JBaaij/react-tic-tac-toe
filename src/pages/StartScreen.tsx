@@ -12,14 +12,7 @@ const StartScreen = () => {
   const [currentPlayer, setCurrentPlayer] = useState(1); // [1, 2]
   const navigate = useNavigate();
   const onPlayGame = () => {
-    const newGrid = setGridCellValue({
-      grid,
-      x: 1,
-      y: 1,
-      value: currentPlayer === 1 ? 1 : 2,
-    });
-    setGrid(newGrid);
-    setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
+    navigate('/game');
   };
 
   const onNavigateToGame = () => {
