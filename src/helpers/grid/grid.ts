@@ -5,18 +5,28 @@ interface GridArguments {
 }
 
 export const createGrid = (args: GridArguments) => {
-    //{ size: 3 }
     const { size } = args;
     return Array.from(Array(size), () => new Array(size).fill(0));
 };
 
-export const setGridCellValue = (args: GridCellValue) => {
-    const { grid, x, y, value } = args;
+export const setGridCellValue = (args: { grid: number[][], cellValue: GridCellValue }) => {
+    const { grid, cellValue } = args;
+    const { x, y, value } = cellValue;
     const newGrid = [...grid]; // Create a new copy of the grid array
     newGrid[y] = [...newGrid[y]]; // Create a new copy of the row array
     newGrid[y][x] = value;
     return newGrid;
 };
+
+const grid = [
+    [1, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+];
+
+const row = 0
+
+const value = 1
 
 export const checkRowIsSameValue = (args: RowIsSameValue) => {
     const { grid, row, value } = args;

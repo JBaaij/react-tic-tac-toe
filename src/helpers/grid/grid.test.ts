@@ -18,8 +18,8 @@ describe('Grid functions', () => {
 
     describe('setGridCellValue', () => {
         it('should set the value of a cell in the grid', () => {
-            const args: GridCellValue = { grid, x: 1, y: 2, value: 1 };
-            const newGrid = setGridCellValue(args);
+            const args: GridCellValue = { x: 1, y: 2, value: 1 };
+            const newGrid = setGridCellValue({grid, cellValue: args});
             expect(newGrid[2][1]).toEqual(1);
         });
     });

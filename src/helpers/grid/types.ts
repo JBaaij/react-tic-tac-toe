@@ -16,7 +16,6 @@ export interface RowIsSameValue {
 }
 
 export interface GridCellValue {
-    grid: number[][];
     x: number;
     y: number;
     value: GridValue;
