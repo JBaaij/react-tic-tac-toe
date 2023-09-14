@@ -1,11 +1,12 @@
 import TitleComponent from '../components/TitleComponent';
 import LabelButton from '../components/LabelButton';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import {useEffect, useState, useCallback, useContext} from 'react';
 import { createGrid, setGridCellValue } from '../helpers/grid/grid';
 import './StartScreen.css';
 import IconX from '../components/icons/IconX';
 import IconO from '../components/icons/IconO';
+import {AppStateContext} from "../AppStateContext";
 
 const StartScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
@@ -13,6 +14,7 @@ const StartScreen = () => {
   const navigate = useNavigate();
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [alertNoChoice, setAlertNoChoice] = useState(false);
+  const appState = useContext(AppStateContext);
 
   const onPlayGame = () => {
     if (selectedChoice === 'ticx' || selectedChoice === 'tico') {
@@ -31,7 +33,12 @@ const StartScreen = () => {
     navigate('/highscore');
   };
 
+  const onRadioButtonClick = (choice: string) => {
+    setSelectedChoice(choice);
+  }
+
   useEffect(() => {
+    console.log(appState.selectedChoice)
     console.log('mounted');
   }, []);
 
@@ -61,7 +68,7 @@ const StartScreen = () => {
               id="ticx"
               name="choice"
               checked={selectedChoice === 'ticx'}
-              onChange={() => setSelectedChoice('ticx')}
+              onChange={() => onRadioButtonClick('ticx')}
             />
             <label htmlFor="ticx">
               <div style={{ marginLeft: 210 }} />

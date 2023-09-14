@@ -5,10 +5,11 @@ import {
     createGrid,
     setGridCellValue
 } from "../helpers/grid/grid";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import GridItem from "../components/game/GridItem";
 import {GridCellValue} from "../helpers/grid/types";
 import Alert from "../components/alert/Alert";
+import {AppStateContext} from "../AppStateContext";
 
 const GameScreen = () => {
     // set ik local state met initial state van createGrid
@@ -16,6 +17,9 @@ const GameScreen = () => {
     // ts using <> to set type is called generic. In this case player can be 1 or 2
     const [player, setPlayer] = useState<1 | 2>(1);
     const [isTicTacToe, setIsTicTacToe] = useState(false);
+    const appState = useContext(AppStateContext);
+
+    console.log(appState.selectedChoice);
 
     const checkIsTicTacToe = (grid: number[][], player: 1 | 2) => {
         const isOneOfRowsTheSame = grid.some((row,  index) => checkRowIsSameValue({grid, row: index, value: player}));
