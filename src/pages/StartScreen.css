@@ -61,10 +61,10 @@ body {
   padding-bottom: 7px;
   border-radius: 10px;
 }
-#radiobut:hover {
+/* #radiobut:hover {
   background: rgb(94, 159, 156);
 }
-
+*/
 .icon-x2 {
   color: white;
   background: black;

@@ -1,23 +1,23 @@
 import TitleComponent from '../components/TitleComponent';
 import LabelButton from '../components/LabelButton';
 import { useNavigate } from 'react-router-dom';
-import {useEffect, useState, useCallback, useContext} from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { createGrid, setGridCellValue } from '../helpers/grid/grid';
 import './StartScreen.css';
 import IconX from '../components/icons/IconX';
 import IconO from '../components/icons/IconO';
-import {AppStateContext} from "../AppStateContext";
+import { AppStateContext } from '../AppStateContext';
 
 const StartScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
   const [currentPlayer, setCurrentPlayer] = useState(1); // [1, 2]
   const navigate = useNavigate();
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [alertNoChoice, setAlertNoChoice] = useState(false);
   const appState = useContext(AppStateContext);
 
   const onPlayGame = () => {
-    if (selectedChoice === 'ticx' || selectedChoice === 'tico') {
+    if (selectedChoice === 1 || selectedChoice === 2) {
       navigate('/game');
     }
     if (selectedChoice === null) {
@@ -33,14 +33,14 @@ const StartScreen = () => {
     navigate('/highscore');
   };
 
-  const onRadioButtonClick = (choice: string) => {
+  const onRadioButtonClick = (choice: number) => {
     setSelectedChoice(choice);
-  }
+  };
 
   useEffect(() => {
-    console.log(appState.selectedChoice)
-    console.log('mounted');
-  }, []);
+    console.log(appState.selectedChoice);
+    console.log(selectedChoice);
+  }, [selectedChoice]);
 
   useEffect(() => {
     console.log(grid);
@@ -67,15 +67,15 @@ const StartScreen = () => {
               type="radio"
               id="ticx"
               name="choice"
-              checked={selectedChoice === 'ticx'}
-              onChange={() => onRadioButtonClick('ticx')}
+              checked={appState.selectedChoice === 1}
+              onChange={() => onRadioButtonClick(1)}
             />
             <label htmlFor="ticx">
               <div style={{ marginLeft: 210 }} />
               <IconX
                 width={30}
                 height={30}
-                color={selectedChoice === 'ticx' ? '#EDB809' : '#ccc'}
+                color={selectedChoice === 1 ? '#EDB809' : '#ccc'}
               />
             </label>
 
@@ -83,14 +83,14 @@ const StartScreen = () => {
               type="radio"
               id="tico"
               name="choice"
-              checked={selectedChoice === 'tico'}
-              onChange={() => setSelectedChoice('tico')}
+              checked={selectedChoice === 2}
+              onChange={() => setSelectedChoice(2)}
             />
             <label htmlFor="tico">
               <IconO
                 width={30}
                 height={30}
-                color={selectedChoice === 'tico' ? '#EDB809' : '#ccc'}
+                color={selectedChoice === 2 ? '#EDB809' : '#ccc'}
               />
             </label>
           </div>
