@@ -20,10 +20,23 @@ const GameScreen = () => {
     if (player === 2) {
       makeRandomCpuMove(grid, player);
       // Assuming you want to switch to player 2 here
-      player = 1;
     }
   };
-
+  const onGridItemClick = useCallback(
+    (value: GridCellValue) => {
+      if (value.value !== 0) return;
+      const newGrid = setGridCellValue({
+        grid,
+        cellValue: { ...value, value: 1 },
+      });
+      setGrid(newGrid);
+      const player = 2;
+      randomCpuMove(newGrid, player);
+      console.log('gamescreen update?', newGrid);
+      setIsTicTacToe(checkIsTicTacToe(newGrid, 1));
+    },
+    [grid, player],
+  );
   const [isTicTacToe, setIsTicTacToe] = useState(false);
   const appState = useContext(AppStateContext);
 
@@ -44,21 +57,8 @@ const GameScreen = () => {
 
   useEffect(() => {
     setIsTicTacToe(checkIsTicTacToe(grid, getPreviousPlayer(player)));
+    console.log(grid);
   }, [grid, player]);
-
-  const onGridItemClick = useCallback(
-    (value: GridCellValue) => {
-      if (value.value !== 0) return;
-      const newGrid = setGridCellValue({
-        grid,
-        cellValue: { ...value, value: 1 },
-      });
-      setGrid(newGrid);
-      const player = 2;
-      randomCpuMove(newGrid, player);
-    },
-    [grid, player],
-  );
 
   const onReset = useCallback(() => {
     setGrid(createGrid({ size: 3 }));
