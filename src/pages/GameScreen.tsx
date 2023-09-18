@@ -18,10 +18,14 @@ const GameScreen = () => {
   const [player, setPlayer] = useState<1 | 2>(1);
   const randomCpuMove = (grid: number[][], player: number) => {
     if (player === 2) {
-      makeRandomCpuMove(grid, player);
-      // Assuming you want to switch to player 2 here
+      const [newGrid, newPlayer] = makeRandomCpuMove(grid, player); // Capture the updated grid
+      console.log('gamescreen update 2?', newGrid);
+      setGrid(newGrid); // Update the grid state with the newGrid
+      // Assuming you want to switch to player 1 here (newPlayer)
+      // Implement logic to update your state with newPlayer
     }
   };
+
   const onGridItemClick = useCallback(
     (value: GridCellValue) => {
       if (value.value !== 0) return;
