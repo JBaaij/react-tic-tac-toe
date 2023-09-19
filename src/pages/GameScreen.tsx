@@ -11,18 +11,49 @@ import { GridCellValue } from '../helpers/grid/types';
 import Alert from '../components/alert/Alert';
 import { AppStateContext } from '../AppStateContext';
 import { makeRandomCpuMove } from '../helpers/grid/cpumove';
+import {
+  checkPotentialWinRow,
+  checkPotentialWinColumn,
+  checkPotentialWinDiagonal,
+} from '../helpers/grid/checkwin';
+
 const GameScreen = () => {
-  // set ik local state met initial state van createGrid
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
-  // ts using <> to set type is called generic. In this case player can be 1 or 2
   const [player, setPlayer] = useState<1 | 2>(1);
-  const randomCpuMove = (grid: number[][], player: number) => {
+  const CpuNoSmartMove = (grid: number[][], player: number) => {
     if (player === 2) {
-      const [newGrid, newPlayer] = makeRandomCpuMove(grid, player); // Capture the updated grid
-      console.log('gamescreen update 2?', newGrid);
-      setGrid(newGrid); // Update the grid state with the newGrid
-      // Assuming you want to switch to player 1 here (newPlayer)
-      // Implement logic to update your state with newPlayer
+      const [newGrid, newPlayer] = makeRandomCpuMove(grid, player);
+      setGrid(newGrid);
+    }
+  };
+  const [isTicTacToe, setIsTicTacToe] = useState(false);
+  const [smartMove, setSmartMove] = useState(false);
+
+  const goToCpu = (newGrid: number[][]) => {
+    const isPlayer1Winner = checkIsTicTacToe(newGrid, 1);
+
+    if (isPlayer1Winner) {
+      setIsTicTacToe(true);
+      let player = 1;
+      window.alert(`Player ${player.toString()} has won!`);
+      onReset();
+      return;
+    }
+    const player = 2;
+    if (checkSmartRow(newGrid, player)) {
+      return;
+      // Handle smart move logic
+    }
+    if (checkSmartColumn(newGrid, player)) {
+      return;
+      // Handle smart move logic
+    }
+    if (checkSmartDiagonal(newGrid, player)) {
+      return;
+      // Handle smart move logic
+    } else {
+      //const player = 2;
+      CpuNoSmartMove(newGrid, player);
     }
   };
 
@@ -33,26 +64,50 @@ const GameScreen = () => {
         grid,
         cellValue: { ...value, value: 1 },
       });
+
       setGrid(newGrid);
-      const player = 2;
-      randomCpuMove(newGrid, player);
-      console.log('gamescreen update?', newGrid);
-      setIsTicTacToe(checkIsTicTacToe(newGrid, 1));
+      goToCpu(newGrid);
     },
-    [grid, player],
+    [grid, isTicTacToe],
   );
-  const [isTicTacToe, setIsTicTacToe] = useState(false);
+
   const appState = useContext(AppStateContext);
 
   const checkIsTicTacToe = (grid: number[][], player: 1 | 2) => {
-    const isOneOfRowsTheSame = grid.some((row, index) =>
-      checkRowIsSameValue({ grid, row: index, value: player }),
-    );
+    const isOneOfRowsTheSame = grid.some((row, index) => {
+      const result = checkRowIsSameValue({ grid, row: index, value: player });
+      return result;
+    });
     const isOneOfColumnTheSame = grid.some((row, index) =>
       checkColumnIsSameValue({ grid, column: index, value: player }),
     );
     const isDiagonalTheSame = checkDiagonalIsSameValue({ grid, value: player });
     return isOneOfRowsTheSame || isOneOfColumnTheSame || isDiagonalTheSame;
+  };
+  type Grid = number[][];
+  interface PotentialWinResult {
+    grid: Grid;
+    value: number;
+  }
+  const checkSmartRow = (
+    grid: Grid,
+    player: 1 | 2,
+  ): PotentialWinResult | null => {
+    return checkPotentialWinRow(grid, player);
+  };
+
+  const checkSmartColumn = (
+    grid: Grid,
+    player: 1 | 2,
+  ): PotentialWinResult | null => {
+    return checkPotentialWinColumn(grid, player);
+  };
+
+  const checkSmartDiagonal = (
+    grid: Grid,
+    player: 1 | 2,
+  ): PotentialWinResult | null => {
+    return checkPotentialWinDiagonal(grid, player);
   };
 
   const getPreviousPlayer = (player: 1 | 2) => {
@@ -61,7 +116,6 @@ const GameScreen = () => {
 
   useEffect(() => {
     setIsTicTacToe(checkIsTicTacToe(grid, getPreviousPlayer(player)));
-    console.log(grid);
   }, [grid, player]);
 
   const onReset = useCallback(() => {
