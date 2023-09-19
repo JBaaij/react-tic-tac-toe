@@ -7,11 +7,11 @@ import {
 } from 'react';
 
 const AppStateContext = createContext<{
-  selectedChoice: 1 | 2 | null;
-  setSelectedChoice: (choice: 1 | 2 | null) => void;
+  selectedChoice: 1 | 2;
+  setSelectedChoice: (choice: 1 | 2) => void;
   userName: string;
 }>({
-  selectedChoice: null,
+  selectedChoice: 1,
   setSelectedChoice: () => {},
   userName: '',
 });
@@ -21,7 +21,7 @@ const AppStateProvider = ({
 }: {
   children: ReactComponentElement<any>;
 }) => {
-  const [selectedChoice, setSelectedChoice] = useState<1 | 2 | null>(null);
+  const [selectedChoice, setSelectedChoice] = useState<1 | 2>(1);
   const [userName, setUserName] = useState('');
 
   return (

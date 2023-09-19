@@ -9,7 +9,7 @@ interface GridArguments {
   size: number;
 }
 
-export const createGrid = (args: GridArguments) => {
+export const createGrid = (args: GridArguments)=> {
   const { size } = args;
   return Array.from(Array(size), () => new Array(size).fill(0));
 };

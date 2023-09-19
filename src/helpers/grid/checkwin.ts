@@ -53,7 +53,10 @@ export const checkPotentialWinRow = (
       playedMove(false);
       console.log('oppositePlayer:', oppositePlayer, 'value after', value);
       const columnIndex = emptyCells[0];
-      const newGrid = [...grid];
+
+      const newGrid = grid.map((row, rowIndex) => {
+        return [...row]
+      })
       newGrid[rowIndex][columnIndex] = value;
 
       return {

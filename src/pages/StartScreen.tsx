@@ -12,15 +12,14 @@ const StartScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
   const [currentPlayer, setCurrentPlayer] = useState(1); // [1, 2]
   const navigate = useNavigate();
-  const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [alertNoChoice, setAlertNoChoice] = useState(false);
   const appState = useContext(AppStateContext);
 
   const onPlayGame = () => {
-    if (selectedChoice === 1 || selectedChoice === 2) {
+    if (appState.selectedChoice === 1 || appState.selectedChoice === 2) {
       navigate('/game');
     }
-    if (selectedChoice === null) {
+    if (appState.selectedChoice === null) {
       setAlertNoChoice(true);
     }
   };
@@ -33,14 +32,10 @@ const StartScreen = () => {
     navigate('/highscore');
   };
 
-  const onRadioButtonClick = (choice: number) => {
-    setSelectedChoice(choice);
-  };
-
   useEffect(() => {
     console.log(appState.selectedChoice);
-    console.log(selectedChoice);
-  }, [selectedChoice]);
+    console.log(appState.selectedChoice);
+  }, [appState.selectedChoice]);
 
   useEffect(() => {
     console.log(grid);
@@ -68,14 +63,14 @@ const StartScreen = () => {
               id="ticx"
               name="choice"
               checked={appState.selectedChoice === 1}
-              onChange={() => onRadioButtonClick(1)}
+              onChange={() => appState.setSelectedChoice(1)}
             />
             <label htmlFor="ticx">
               <div style={{ marginLeft: 210 }} />
               <IconX
                 width={30}
                 height={30}
-                color={selectedChoice === 1 ? '#EDB809' : '#ccc'}
+                color={appState.selectedChoice === 1 ? '#EDB809' : '#ccc'}
               />
             </label>
 
@@ -83,14 +78,14 @@ const StartScreen = () => {
               type="radio"
               id="tico"
               name="choice"
-              checked={selectedChoice === 2}
-              onChange={() => setSelectedChoice(2)}
+              checked={appState.selectedChoice === 2}
+              onChange={() => appState.setSelectedChoice(2)}
             />
             <label htmlFor="tico">
               <IconO
                 width={30}
                 height={30}
-                color={selectedChoice === 2 ? '#EDB809' : '#ccc'}
+                color={appState.selectedChoice === 2 ? '#EDB809' : '#ccc'}
               />
             </label>
           </div>
