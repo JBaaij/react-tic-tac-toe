@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import StartScreen from './pages/StartScreen';
 import GameScreen from './pages/GameScreen';
 import HighScoreScreen from './pages/HighScoreScreen';
+import TestPage from "./pages/TestPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<StartScreen />} />
           <Route path="/game" element={<GameScreen />} />
           <Route path="/highscore" element={<HighScoreScreen />} />
+          <Route path="/test" element={<TestPage />} />
         </Routes>
       </BrowserRouter>
     </div>
