@@ -5,12 +5,13 @@ import {
   ReactElement,
   useState,
 } from 'react';
-
-const AppStateContext = createContext<{
+interface AppStateContext {
   selectedChoice: 1 | 2;
   setSelectedChoice: (choice: 1 | 2) => void;
   userName: string;
-}>({
+}
+
+const AppStateContext = createContext<AppStateContext>({
   selectedChoice: 1,
   setSelectedChoice: () => {},
   userName: '',

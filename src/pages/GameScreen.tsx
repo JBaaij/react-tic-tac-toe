@@ -2,7 +2,7 @@ import {
   checkColumnIsSameValue,
   checkDiagonalIsSameValue,
   checkRowIsSameValue,
-  createGrid,
+  createGrid, getEmptyCells,
   setGridCellValue,
 } from '../helpers/grid/grid';
 import {useCallback, useContext, useEffect, useState} from 'react';
@@ -23,7 +23,7 @@ const GameScreen = () => {
 
   const doMove = (value: GridCellValue) => {
     if (isYourTurn(player)) doPlayerMove(value);
-    doCPUMove(value);
+    else doCPUMove(value);
   };
 
   const doPlayerMove = (value: GridCellValue) => {
@@ -31,6 +31,14 @@ const GameScreen = () => {
     const newGrid = setGridCellValue({grid, cellValue: { ...value, value: player }});
     setGrid(newGrid);
   };
+
+  const doRandomMove = (grid: number[][]) => {
+    const emptyCells = getEmptyCells(grid);
+    const randomIndex = Math.floor(Math.random() * emptyCells.length);
+    const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: 2}
+    const newGrid = setGridCellValue({grid, cellValue: newCellValue});
+    setGrid(newGrid);
+  }
 
   const canPlayerHaveTicTacToe = (grid: number[][], player: 1 | 2) => {
     const hasWinPotentials = grid.map((row, rowIndex) => {
@@ -59,7 +67,7 @@ const GameScreen = () => {
     if(canPlayerHaveTicTacToe(grid, 1)) {
       // block it
     };
-    // random move
+    doRandomMove(grid);
   };
 
   const switchPlayer = () => setPlayer(togglePlayer(player));

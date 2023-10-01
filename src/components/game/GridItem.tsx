@@ -12,6 +12,8 @@ const GridItem = (props: GridItemProps) => {
     // const value = props.value;
     // kan ook direct in de functie zelf:
     // const GridItem = ({onClick, value}: GridItemProps) => {
-    return <div style={{color: 'white', fontWeight: 'bold', userSelect: 'none', cursor: 'pointer'}} className="grid-item" onClick={() => onClick(value)} >{value.value}</div>
+    return <div style={{color: 'white', fontWeight: 'bold', userSelect: 'none', cursor: 'pointer'}} className="grid-item" onClick={() => {
+        onClick(value);
+    }} >{value.value}</div>
 }
 export default GridItem;

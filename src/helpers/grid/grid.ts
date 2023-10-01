@@ -45,3 +45,15 @@ export const checkDiagonalIsSameValue = (args: DiagonalIsSameValue) => {
     diagonal2.every((cell) => cell === value)
   );
 };
+
+export const getEmptyCells = (grid: number[][]) => {
+  const emptyCells: GridCellValue[] = [];
+  grid.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell === 0) {
+        emptyCells.push({ x, y, value: 0 });
+      }
+    });
+  });
+  return emptyCells;
+}

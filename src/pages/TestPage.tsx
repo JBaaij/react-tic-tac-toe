@@ -149,10 +149,10 @@ const TestPage = () => {
     return x.filter((x) => x % 2 === 0);
   }
 
-  [1,2,3]
-      .map(mapNumbersAndAddOne)
-      .filter(filterOddNumbers)
-      .map(mapNumbersAndAddOne);
+  // [1,2,3]
+  //     .map(mapNumbersAndAddOne)
+  //     .filter(filterOddNumbers)
+  //     .map(mapNumbersAndAddOne);
 
   // [2,3,4]
 
@@ -161,3 +161,64 @@ const TestPage = () => {
   );
 };
 export default TestPage;
+
+
+const data = [
+    { category: 'A', value: 10 },
+    { category: 'B', value: 20 },
+    { category: 'A', value: 15 },
+];
+
+const dataItem = {
+    category: 'A', value: 10
+}
+//
+// const groupedData = data.reduce((groups, item) => {
+//     const key = item.category; // A
+//     // {A:[{ category: 'A', value: 10 }, B:[{ category: 'B', value: 20 }]]}
+//     if (!groups[key]) {
+//         groups[key] = [];
+//     }
+//     // {A:[{ category: 'A', value: 10 }, B:[{ category: 'B', value: 20 }]]}
+//     groups[key].push(item);
+//     // {A:[{ category: 'A', value: 10 }, { category: 'A', value: 15 }], B:[{ category: 'B', value: 20 }]]}
+//     return groups;
+// }, {});
+//
+// console.log(groupedData);
+// // { A: [ { category: 'A', value: 10 }, { category: 'A', value: 15 } ],
+// //   B: [ { category: 'B', value: 20 } ] }
+//
+// const words = ["apple", "banana", "apple", "cherry", "banana", "apple"];
+//
+// // const words2 = ["apple", "banana", "apple", "cherry", "banana", "apple"];
+// // const listItemOccurrenceCounterDict = (accumulator, word) => {
+// //     accumulator[word] = (accumulator[word] || 0) + 1;
+// //     return accumulator;
+// // }
+// //
+// // const wordCount = words.reduce(listItemOccurrenceCounterDict, {});
+// //
+// //
+// // const wordCount2 = words2.reduce((accumulator, word) => {
+// //     accumulator[word] = (accumulator[word] || 0) + 1;
+// //     return accumulator;
+// // }, {});
+//
+// const countWords = (words) => {
+//     return words.reduce((accumulator, word) => {
+//         accumulator[word] = (accumulator[word] || 0) + 1;
+//         return accumulator;
+//     }, {});
+// }
+//
+// const wordCount = countWords(words)
+//
+//
+// console.log(wordCount);
+// // Output: { "apple": 3, "banana": 2, "cherry": 1 }
+//
+// Object.keys({ category: 'A', value: 10 }).map((item) => {
+//     // item = "value"
+// })
+//
