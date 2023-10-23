@@ -21,22 +21,19 @@ const GameScreen = () => {
     return player === appState.selectedChoice;
   }, [appState.selectedChoice]);
 
-  const doMove = (value: GridCellValue) => {
-    if (isYourTurn(player)) doPlayerMove(value);
-    else doCPUMove(value);
-  };
-
   const doPlayerMove = (value: GridCellValue) => {
     if (value.value !== 0) return;
     const newGrid = setGridCellValue({grid, cellValue: { ...value, value: player }});
     setGrid(newGrid);
+    switchPlayer();
   };
 
   const doRandomMove = (grid: number[][]) => {
     const emptyCells = getEmptyCells(grid);
     const randomIndex = Math.floor(Math.random() * emptyCells.length);
-    const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: 2}
+    const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: player}
     const newGrid = setGridCellValue({grid, cellValue: newCellValue});
+    switchPlayer();
     setGrid(newGrid);
   }
 
@@ -60,7 +57,7 @@ const GameScreen = () => {
     return hasWinPotentials.some(row => row.some(cell => cell === true));
   };
 
-  const doCPUMove = (value: GridCellValue) => {
+  const doCPUMove = (grid: number[][]) => {
     if(canPlayerHaveTicTacToe(grid, 2)) {
       // do it
     }
@@ -73,8 +70,7 @@ const GameScreen = () => {
   const switchPlayer = () => setPlayer(togglePlayer(player));
 
   const onGridItemClick = (value: GridCellValue) => {
-    doMove(value);
-    switchPlayer();
+    if(isYourTurn(player)) doPlayerMove(value);
   };
 
   const checkIsTicTacToe = (grid: number[][], player: 1 | 2) => {
@@ -89,19 +85,19 @@ const GameScreen = () => {
     return isOneOfRowsTheSame || isOneOfColumnTheSame || isDiagonalTheSame;
   };
 
-  const getPreviousPlayer = (player: 1 | 2) => {
-    return player === 1 ? 2 : 1;
-  };
-
   const togglePlayer = (player: 1 | 2) => player === 1 ? 2 : 1;
 
   useEffect(() => {
-    setIsTicTacToe(checkIsTicTacToe(grid, getPreviousPlayer(player)));
-  }, [grid]);
+    setIsTicTacToe(checkIsTicTacToe(grid, player));
+    if(!isYourTurn(player)) {
+        doCPUMove(grid);
+    }
+  }, [player, grid]);
 
   const onReset = useCallback(() => {
     setGrid(createGrid({ size: 3 }));
     setPlayer(1);
+    if(!isYourTurn(player)) doCPUMove(grid)
     setIsTicTacToe(false);
   }, []);
 
@@ -125,7 +121,7 @@ const GameScreen = () => {
       })}
       {isTicTacToe && (
         <Alert
-          name={getPreviousPlayer(player).toString()}
+          name={player.toString()}
           okOnClick={onReset}
         />
       )}
