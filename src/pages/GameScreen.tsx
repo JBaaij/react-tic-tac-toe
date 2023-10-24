@@ -15,11 +15,15 @@ const GameScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
   const [player, setPlayer] = useState<1 | 2>(1);
   const [isTicTacToe, setIsTicTacToe] = useState(false);
+  const [isDraw, setIsDraw] = useState(false);
   const appState = useContext(AppStateContext);
 
   const isYourTurn = useCallback((player: 1 | 2 | null) => {
     return player === appState.selectedChoice;
   }, [appState.selectedChoice]);
+
+  const getCPUPlayer = () => appState.selectedChoice === 1 ? 2 : 1;
+  const getPlayer = () => appState.selectedChoice;
 
   const doPlayerMove = (value: GridCellValue) => {
     if (value.value !== 0) return;
@@ -31,39 +35,45 @@ const GameScreen = () => {
   const doRandomMove = (grid: number[][]) => {
     const emptyCells = getEmptyCells(grid);
     const randomIndex = Math.floor(Math.random() * emptyCells.length);
+    if(emptyCells.length === 0) {
+      return;
+    }
     const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: player}
     const newGrid = setGridCellValue({grid, cellValue: newCellValue});
     switchPlayer();
     setGrid(newGrid);
   }
 
-  const canPlayerHaveTicTacToe = (grid: number[][], player: 1 | 2) => {
-    const hasWinPotentials = grid.map((row, rowIndex) => {
-      return row.map((cell, cellIndex) => {
-        const newCellValue: GridCellValue = {
-          x: cellIndex,
-          y: rowIndex,
-          value: player,
-        };
-        if (cell === 0) {
-          const newGrid = setGridCellValue({grid, cellValue: newCellValue});
-          if (checkIsTicTacToe(newGrid, player)) {
-            return true;
-          }
+  const getPossibleWinningMoveByPlayer = (grid: number[][], player: 1 | 2) => {
+    let possibleWinningMove: GridCellValue | null = null;
+    grid.forEach((row, rowIndex) => {
+      row.forEach((cell, cellIndex) => {
+        if(cell !== 0) {
+          return;
         }
-        return false;
+        const newCellValue: GridCellValue = {x: cellIndex, y: rowIndex, value: player,};
+        if (checkIsTicTacToe(setGridCellValue({grid, cellValue: newCellValue}), player)) {
+          possibleWinningMove = newCellValue;
+        }
       })
     });
-    return hasWinPotentials.some(row => row.some(cell => cell === true));
+    return possibleWinningMove;
   };
 
   const doCPUMove = (grid: number[][]) => {
-    if(canPlayerHaveTicTacToe(grid, 2)) {
-      // do it
+    const cpuWinningMove = getPossibleWinningMoveByPlayer(grid, getCPUPlayer());
+    const playerWinningMove = getPossibleWinningMoveByPlayer(grid, getPlayer());
+    if(cpuWinningMove) {
+      switchPlayer();
+      setGrid(setGridCellValue({grid, cellValue: cpuWinningMove as GridCellValue}));
+      return;
     }
-    if(canPlayerHaveTicTacToe(grid, 1)) {
-      // block it
-    };
+    if(playerWinningMove) {
+      switchPlayer();
+      setGrid(setGridCellValue({grid, cellValue: {...playerWinningMove as GridCellValue, value: getCPUPlayer()} as GridCellValue}));
+      return;
+    }
+
     doRandomMove(grid);
   };
 
@@ -89,6 +99,7 @@ const GameScreen = () => {
 
   useEffect(() => {
     setIsTicTacToe(checkIsTicTacToe(grid, player));
+    console.log(isYourTurn(player))
     if(!isYourTurn(player)) {
         doCPUMove(grid);
     }
