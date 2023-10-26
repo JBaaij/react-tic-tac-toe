@@ -57,3 +57,7 @@ export const getEmptyCells = (grid: number[][]) => {
   });
   return emptyCells;
 }
+
+export const isEmpty = (grid: number[][]) => {
+  return grid.every((row) => row.every((cell) => cell === 0));
+}

@@ -2,7 +2,7 @@ import {
   checkColumnIsSameValue,
   checkDiagonalIsSameValue,
   checkRowIsSameValue,
-  createGrid, getEmptyCells,
+  createGrid, getEmptyCells, isEmpty,
   setGridCellValue,
 } from '../helpers/grid/grid';
 import {useCallback, useContext, useEffect, useState} from 'react';
@@ -29,7 +29,6 @@ const GameScreen = () => {
     if (value.value !== 0) return;
     const newGrid = setGridCellValue({grid, cellValue: { ...value, value: player }});
     setGrid(newGrid);
-    switchPlayer();
   };
 
   const doRandomMove = (grid: number[][]) => {
@@ -40,7 +39,6 @@ const GameScreen = () => {
     }
     const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: player}
     const newGrid = setGridCellValue({grid, cellValue: newCellValue});
-    switchPlayer();
     setGrid(newGrid);
   }
 
@@ -64,12 +62,10 @@ const GameScreen = () => {
     const cpuWinningMove = getPossibleWinningMoveByPlayer(grid, getCPUPlayer());
     const playerWinningMove = getPossibleWinningMoveByPlayer(grid, getPlayer());
     if(cpuWinningMove) {
-      switchPlayer();
       setGrid(setGridCellValue({grid, cellValue: cpuWinningMove as GridCellValue}));
       return;
     }
     if(playerWinningMove) {
-      switchPlayer();
       setGrid(setGridCellValue({grid, cellValue: {...playerWinningMove as GridCellValue, value: getCPUPlayer()} as GridCellValue}));
       return;
     }
@@ -98,12 +94,22 @@ const GameScreen = () => {
   const togglePlayer = (player: 1 | 2) => player === 1 ? 2 : 1;
 
   useEffect(() => {
-    setIsTicTacToe(checkIsTicTacToe(grid, player));
-    console.log(isYourTurn(player))
-    if(!isYourTurn(player)) {
-        doCPUMove(grid);
+    const isTicTacToe = checkIsTicTacToe(grid, player);
+    if(isTicTacToe) {
+        setIsTicTacToe(true);
+        return;
     }
-  }, [player, grid]);
+    if(!isEmpty(grid)) {
+      switchPlayer();
+    }
+
+  }, [grid]);
+
+  useEffect(() => {
+    if(!isYourTurn(player)) {
+      doCPUMove(grid);
+    }
+  }, [player]);
 
   const onReset = useCallback(() => {
     setGrid(createGrid({ size: 3 }));
