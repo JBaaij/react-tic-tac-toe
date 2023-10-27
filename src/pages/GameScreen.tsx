@@ -2,14 +2,17 @@ import {
   checkColumnIsSameValue,
   checkDiagonalIsSameValue,
   checkRowIsSameValue,
-  createGrid, getEmptyCells, isEmpty,
+  createGrid,
+  getEmptyCells,
+  isEmpty,
   setGridCellValue,
 } from '../helpers/grid/grid';
-import {useCallback, useContext, useEffect, useState} from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import GridItem from '../components/game/GridItem';
-import {GridCellValue} from '../helpers/grid/types';
+import { GridCellValue } from '../helpers/grid/types';
 import Alert from '../components/alert/Alert';
-import {AppStateContext} from '../AppStateContext';
+import Alert2 from '../components/alert/Alert2';
+import { AppStateContext } from '../AppStateContext';
 
 const GameScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
@@ -17,43 +20,63 @@ const GameScreen = () => {
   const [isTicTacToe, setIsTicTacToe] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const appState = useContext(AppStateContext);
+  const [turnNumber, setTurnNumber] = useState(1);
+  const isYourTurn = useCallback(
+    (player: 1 | 2 | null) => {
+      return player === appState.selectedChoice;
+    },
+    [appState.selectedChoice],
+  );
 
-  const isYourTurn = useCallback((player: 1 | 2 | null) => {
-    return player === appState.selectedChoice;
-  }, [appState.selectedChoice]);
-
-  const getCPUPlayer = () => appState.selectedChoice === 1 ? 2 : 1;
+  const getCPUPlayer = () => (appState.selectedChoice === 1 ? 2 : 1);
   const getPlayer = () => appState.selectedChoice;
+
+  //const checkDraw = (turnNumber: number) => {
 
   const doPlayerMove = (value: GridCellValue) => {
     if (value.value !== 0) return;
-    const newGrid = setGridCellValue({grid, cellValue: { ...value, value: player }});
+    const newGrid = setGridCellValue({
+      grid,
+      cellValue: { ...value, value: player },
+    });
     setGrid(newGrid);
   };
 
   const doRandomMove = (grid: number[][]) => {
     const emptyCells = getEmptyCells(grid);
     const randomIndex = Math.floor(Math.random() * emptyCells.length);
-    if(emptyCells.length === 0) {
+    if (emptyCells.length === 0) {
       return;
     }
-    const newCellValue: GridCellValue = {...emptyCells[randomIndex], value: player}
-    const newGrid = setGridCellValue({grid, cellValue: newCellValue});
+    const newCellValue: GridCellValue = {
+      ...emptyCells[randomIndex],
+      value: player,
+    };
+    const newGrid = setGridCellValue({ grid, cellValue: newCellValue });
     setGrid(newGrid);
-  }
+  };
 
   const getPossibleWinningMoveByPlayer = (grid: number[][], player: 1 | 2) => {
     let possibleWinningMove: GridCellValue | null = null;
     grid.forEach((row, rowIndex) => {
       row.forEach((cell, cellIndex) => {
-        if(cell !== 0) {
+        if (cell !== 0) {
           return;
         }
-        const newCellValue: GridCellValue = {x: cellIndex, y: rowIndex, value: player,};
-        if (checkIsTicTacToe(setGridCellValue({grid, cellValue: newCellValue}), player)) {
+        const newCellValue: GridCellValue = {
+          x: cellIndex,
+          y: rowIndex,
+          value: player,
+        };
+        if (
+          checkIsTicTacToe(
+            setGridCellValue({ grid, cellValue: newCellValue }),
+            player,
+          )
+        ) {
           possibleWinningMove = newCellValue;
         }
-      })
+      });
     });
     return possibleWinningMove;
   };
@@ -61,12 +84,22 @@ const GameScreen = () => {
   const doCPUMove = (grid: number[][]) => {
     const cpuWinningMove = getPossibleWinningMoveByPlayer(grid, getCPUPlayer());
     const playerWinningMove = getPossibleWinningMoveByPlayer(grid, getPlayer());
-    if(cpuWinningMove) {
-      setGrid(setGridCellValue({grid, cellValue: cpuWinningMove as GridCellValue}));
+    if (cpuWinningMove) {
+      setGrid(
+        setGridCellValue({ grid, cellValue: cpuWinningMove as GridCellValue }),
+      );
       return;
     }
-    if(playerWinningMove) {
-      setGrid(setGridCellValue({grid, cellValue: {...playerWinningMove as GridCellValue, value: getCPUPlayer()} as GridCellValue}));
+    if (playerWinningMove) {
+      setGrid(
+        setGridCellValue({
+          grid,
+          cellValue: {
+            ...(playerWinningMove as GridCellValue),
+            value: getCPUPlayer(),
+          } as GridCellValue,
+        }),
+      );
       return;
     }
 
@@ -76,7 +109,7 @@ const GameScreen = () => {
   const switchPlayer = () => setPlayer(togglePlayer(player));
 
   const onGridItemClick = (value: GridCellValue) => {
-    if(isYourTurn(player)) doPlayerMove(value);
+    if (isYourTurn(player)) doPlayerMove(value);
   };
 
   const checkIsTicTacToe = (grid: number[][], player: 1 | 2) => {
@@ -91,30 +124,36 @@ const GameScreen = () => {
     return isOneOfRowsTheSame || isOneOfColumnTheSame || isDiagonalTheSame;
   };
 
-  const togglePlayer = (player: 1 | 2) => player === 1 ? 2 : 1;
+  const togglePlayer = (player: 1 | 2) => (player === 1 ? 2 : 1);
 
   useEffect(() => {
     const isTicTacToe = checkIsTicTacToe(grid, player);
-    if(isTicTacToe) {
-        setIsTicTacToe(true);
-        return;
+    if (isTicTacToe) {
+      setIsTicTacToe(true);
+      return;
     }
-    if(!isEmpty(grid)) {
+    if (turnNumber === 9) {
+      setIsDraw(true);
+    }
+    if (!isEmpty(grid)) {
       switchPlayer();
+      setTurnNumber(turnNumber + 1);
+      console.log(turnNumber);
     }
-
   }, [grid]);
 
   useEffect(() => {
-    if(!isYourTurn(player)) {
+    if (!isYourTurn(player)) {
       doCPUMove(grid);
     }
   }, [player]);
 
   const onReset = useCallback(() => {
+    setTurnNumber(1);
+    setIsDraw(false);
     setGrid(createGrid({ size: 3 }));
     setPlayer(1);
-    if(!isYourTurn(player)) doCPUMove(grid)
+    if (!isYourTurn(player)) doCPUMove(grid);
     setIsTicTacToe(false);
   }, []);
 
@@ -136,12 +175,8 @@ const GameScreen = () => {
           );
         });
       })}
-      {isTicTacToe && (
-        <Alert
-          name={player.toString()}
-          okOnClick={onReset}
-        />
-      )}
+      {isTicTacToe && <Alert name={player.toString()} okOnClick={onReset} />}
+      {isDraw && <Alert2 okOnClick={onReset} />}
     </div>
   );
 };
