@@ -115,6 +115,7 @@ const GameScreen = () => {
   };
 
   const onGridItemClick = (value: GridCellValue) => {
+    if (appState.playerVsPlayer) doPlayerMove(value);
     if (isYourTurn(player)) doPlayerMove(value);
   };
 
@@ -155,12 +156,15 @@ const GameScreen = () => {
   }, [grid]);
 
   useEffect(() => {
-    if (!isYourTurn(player) && !dummy) {
-      doCPUMove(grid);
-    }
-    if (!isYourTurn(player) && dummy) {
-      setDummy(false);
-      switchPlayer();
+    if (!appState.playerVsPlayer) {
+      if (!isYourTurn(player) && !dummy) {
+        doCPUMove(grid);
+      }
+
+      if (!isYourTurn(player) && dummy) {
+        setDummy(false);
+        switchPlayer();
+      }
     }
   }, [player]);
 
@@ -169,7 +173,7 @@ const GameScreen = () => {
     setIsDraw(false);
     setGrid(createGrid({ size: 3 }));
     setPlayer(appState.selectedChoice);
-    if (!isYourTurn(player)) {
+    if (!isYourTurn(player) && !appState.playerVsPlayer) {
       setDummy(true);
       doCPUMove(grid);
     }
@@ -179,7 +183,9 @@ const GameScreen = () => {
   return (
     <div>
       <CountBox labelText={`Gamenumber: ${gameNumber}`} />
-      <CountBox labelText={`Playerscore: ${playerScore}`} />
+      <CountBox
+        labelText={`Playerscore (${appState.userName}) : ${playerScore}`}
+      />
       <div className="contgrid">
         {grid.map((row, rowIndex) => {
           return row.map((cell, cellIndex) => {

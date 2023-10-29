@@ -7,6 +7,7 @@ import './StartScreen.css';
 import IconX from '../components/icons/IconX';
 import IconO from '../components/icons/IconO';
 import { AppStateContext } from '../AppStateContext';
+import NameForm from '../components/NameForm';
 
 const StartScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
@@ -16,15 +17,11 @@ const StartScreen = () => {
   const appState = useContext(AppStateContext);
 
   const onPlayGame = () => {
-    if (appState.selectedChoice === 1 || appState.selectedChoice === 2) {
-      navigate('/game');
-    }
-    if (appState.selectedChoice === null) {
-      setAlertNoChoice(true);
-    }
+    navigate('/game');
   };
 
   const onNavigateToGame = () => {
+    appState.setPlayerVsPlayer(true);
     navigate('/game');
   };
 
@@ -33,7 +30,6 @@ const StartScreen = () => {
   };
 
   useEffect(() => {
-    console.log(appState.selectedChoice);
     console.log(appState.selectedChoice);
   }, [appState.selectedChoice]);
 
@@ -52,10 +48,7 @@ const StartScreen = () => {
         <h5 className="firstline">Pick player 1's mark </h5>
 
         <h5 className="secondline">Remember : X goes first New Game</h5>
-        <form>
-          <input type="text" id="nameInput" placeholder="Enter your name" />
-          <button id="submitButton">Submit</button>
-        </form>
+        <NameForm />
         <form className="box2-buttons">
           <div id="radiobut" style={{ display: 'flex' }}>
             <input
