@@ -13,6 +13,7 @@ import { GridCellValue } from '../helpers/grid/types';
 import Alert from '../components/alert/Alert';
 import Alert2 from '../components/alert/Alert2';
 import { AppStateContext } from '../AppStateContext';
+import CountBox from '../components/icons/CountBox';
 
 const GameScreen = () => {
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
@@ -21,6 +22,9 @@ const GameScreen = () => {
   const [isDraw, setIsDraw] = useState(false);
   const appState = useContext(AppStateContext);
   const [turnNumber, setTurnNumber] = useState(1);
+  const [gameNumber, setGameNumber] = useState(1);
+  const [dummy, setDummy] = useState(false);
+  const [playerScore, setPlayerScore] = useState(0);
   const isYourTurn = useCallback(
     (player: 1 | 2 | null) => {
       return player === appState.selectedChoice;
@@ -106,7 +110,9 @@ const GameScreen = () => {
     doRandomMove(grid);
   };
 
-  const switchPlayer = () => setPlayer(togglePlayer(player));
+  const switchPlayer = () => {
+    setPlayer(togglePlayer(player));
+  };
 
   const onGridItemClick = (value: GridCellValue) => {
     if (isYourTurn(player)) doPlayerMove(value);
@@ -129,22 +135,32 @@ const GameScreen = () => {
   useEffect(() => {
     const isTicTacToe = checkIsTicTacToe(grid, player);
     if (isTicTacToe) {
+      if (player === appState.selectedChoice) {
+        setPlayerScore(playerScore + 2);
+      }
+      setGameNumber(gameNumber + 1);
       setIsTicTacToe(true);
       return;
     }
-    if (turnNumber === 9) {
+    if (turnNumber === grid.length * grid.length) {
+      setPlayerScore(playerScore + 1);
+      setGameNumber(gameNumber + 1);
+      switchPlayer();
       setIsDraw(true);
     }
     if (!isEmpty(grid)) {
       switchPlayer();
       setTurnNumber(turnNumber + 1);
-      console.log(turnNumber);
     }
   }, [grid]);
 
   useEffect(() => {
-    if (!isYourTurn(player)) {
+    if (!isYourTurn(player) && !dummy) {
       doCPUMove(grid);
+    }
+    if (!isYourTurn(player) && dummy) {
+      setDummy(false);
+      switchPlayer();
     }
   }, [player]);
 
@@ -152,31 +168,38 @@ const GameScreen = () => {
     setTurnNumber(1);
     setIsDraw(false);
     setGrid(createGrid({ size: 3 }));
-    setPlayer(1);
-    if (!isYourTurn(player)) doCPUMove(grid);
+    setPlayer(appState.selectedChoice);
+    if (!isYourTurn(player)) {
+      setDummy(true);
+      doCPUMove(grid);
+    }
     setIsTicTacToe(false);
   }, []);
-
+  // <IconX width={22} height={22} />
   return (
-    <div className="contgrid">
-      {grid.map((row, rowIndex) => {
-        return row.map((cell, cellIndex) => {
-          const gridValue: GridCellValue = {
-            x: cellIndex,
-            y: rowIndex,
-            value: grid[rowIndex][cellIndex],
-          };
-          return (
-            <GridItem
-              onClick={onGridItemClick}
-              value={gridValue}
-              key={cellIndex}
-            />
-          );
-        });
-      })}
-      {isTicTacToe && <Alert name={player.toString()} okOnClick={onReset} />}
-      {isDraw && <Alert2 okOnClick={onReset} />}
+    <div>
+      <CountBox labelText={`Gamenumber: ${gameNumber}`} />
+      <CountBox labelText={`Playerscore: ${playerScore}`} />
+      <div className="contgrid">
+        {grid.map((row, rowIndex) => {
+          return row.map((cell, cellIndex) => {
+            const gridValue: GridCellValue = {
+              x: cellIndex,
+              y: rowIndex,
+              value: grid[rowIndex][cellIndex],
+            };
+            return (
+              <GridItem
+                onClick={onGridItemClick}
+                value={gridValue}
+                key={cellIndex}
+              />
+            );
+          });
+        })}
+        {isTicTacToe && <Alert name={player.toString()} okOnClick={onReset} />}
+        {isDraw && <Alert2 okOnClick={onReset} />}
+      </div>
     </div>
   );
 };
