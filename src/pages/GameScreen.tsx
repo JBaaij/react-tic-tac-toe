@@ -14,8 +14,10 @@ import Alert from '../components/alert/Alert';
 import Alert2 from '../components/alert/Alert2';
 import { AppStateContext } from '../AppStateContext';
 import CountBox from '../components/icons/CountBox';
+import { useNavigate } from 'react-router-dom';
 
 const GameScreen = () => {
+  const navigate = useNavigate();
   const [grid, setGrid] = useState(createGrid({ size: 3 }));
   const [player, setPlayer] = useState<1 | 2>(1);
   const [isTicTacToe, setIsTicTacToe] = useState(false);
@@ -24,7 +26,10 @@ const GameScreen = () => {
   const [turnNumber, setTurnNumber] = useState(1);
   const [gameNumber, setGameNumber] = useState(1);
   const [dummy, setDummy] = useState(false);
-  const [playerScore, setPlayerScore] = useState(0);
+  const [isEndScore, setIsEndScore] = useState(false);
+  const onNavigateToHighscores = () => {
+    navigate('/highscore');
+  };
   const isYourTurn = useCallback(
     (player: 1 | 2 | null) => {
       return player === appState.selectedChoice;
@@ -137,15 +142,25 @@ const GameScreen = () => {
     const isTicTacToe = checkIsTicTacToe(grid, player);
     if (isTicTacToe) {
       if (player === appState.selectedChoice) {
-        setPlayerScore(playerScore + 2);
+        appState.setPlayerScore(appState.playerScore + 2);
       }
       setGameNumber(gameNumber + 1);
+      if (gameNumber === 3) {
+        setIsEndScore(true);
+        return;
+      }
       setIsTicTacToe(true);
+
       return;
     }
     if (turnNumber === grid.length * grid.length) {
-      setPlayerScore(playerScore + 1);
+      appState.setPlayerScore(appState.playerScore + 1);
       setGameNumber(gameNumber + 1);
+      if (gameNumber === 3) {
+        setIsEndScore(true);
+        setIsDraw(false);
+        return;
+      }
       switchPlayer();
       setIsDraw(true);
     }
@@ -177,6 +192,7 @@ const GameScreen = () => {
       setDummy(true);
       doCPUMove(grid);
     }
+
     setIsTicTacToe(false);
   }, []);
   // <IconX width={22} height={22} />
@@ -184,7 +200,7 @@ const GameScreen = () => {
     <div>
       <CountBox labelText={`Gamenumber: ${gameNumber}`} />
       <CountBox
-        labelText={`Playerscore (${appState.userName}) : ${playerScore}`}
+        labelText={`Playerscore (${appState.userName}) : ${appState.playerScore}`}
       />
       <div className="contgrid">
         {grid.map((row, rowIndex) => {
@@ -204,7 +220,13 @@ const GameScreen = () => {
           });
         })}
         {isTicTacToe && <Alert name={player.toString()} okOnClick={onReset} />}
-        {isDraw && <Alert2 okOnClick={onReset} />}
+        {isDraw && <Alert2 message="It's a draw" okOnClick={onReset} />}
+        {isEndScore && (
+          <Alert2
+            message={`Congratulations, your endscore is ${appState.playerScore}!`}
+            okOnClick={onNavigateToHighscores}
+          />
+        )}
       </div>
     </div>
   );

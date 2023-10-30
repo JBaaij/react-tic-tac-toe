@@ -12,6 +12,10 @@ interface AppStateContext {
   setUserName: (name: string) => void;
   playerVsPlayer: boolean;
   setPlayerVsPlayer: (value: boolean) => void;
+  playerScore: number;
+  setPlayerScore: (score: number) => void;
+  endScore: number;
+  setEndScore: (score: number) => void;
 }
 
 const AppStateContext = createContext<AppStateContext>({
@@ -21,6 +25,10 @@ const AppStateContext = createContext<AppStateContext>({
   setUserName: () => {},
   playerVsPlayer: false,
   setPlayerVsPlayer: () => {},
+  playerScore: 0,
+  setPlayerScore: () => {},
+  endScore: 0,
+  setEndScore: () => {},
 });
 
 const AppStateProvider = ({
@@ -31,6 +39,8 @@ const AppStateProvider = ({
   const [selectedChoice, setSelectedChoice] = useState<1 | 2>(1);
   const [userName, setUserName] = useState('');
   const [playerVsPlayer, setPlayerVsPlayer] = useState<boolean>(false);
+  const [playerScore, setPlayerScore] = useState<number>(0);
+  const [endScore, setEndScore] = useState<number>(0);
   return (
     <AppStateContext.Provider
       value={{
@@ -40,6 +50,10 @@ const AppStateProvider = ({
         setUserName,
         playerVsPlayer,
         setPlayerVsPlayer,
+        playerScore,
+        setPlayerScore,
+        endScore,
+        setEndScore,
       }}>
       {children}
     </AppStateContext.Provider>
