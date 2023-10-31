@@ -26,9 +26,12 @@ const GameScreen = () => {
   const [turnNumber, setTurnNumber] = useState(1);
   const [gameNumber, setGameNumber] = useState(1);
   const [dummy, setDummy] = useState(false);
-  const [isEndScore, setIsEndScore] = useState(false);
+
   const onNavigateToHighscores = () => {
+    appState.setEndScore(appState.playerScore);
     navigate('/highscore');
+    appState.setIsEndScore(false);
+    setGameNumber(1);
   };
   const isYourTurn = useCallback(
     (player: 1 | 2 | null) => {
@@ -146,7 +149,8 @@ const GameScreen = () => {
       }
       setGameNumber(gameNumber + 1);
       if (gameNumber === 3) {
-        setIsEndScore(true);
+        appState.setIsEndScore(true);
+
         return;
       }
       setIsTicTacToe(true);
@@ -157,7 +161,8 @@ const GameScreen = () => {
       appState.setPlayerScore(appState.playerScore + 1);
       setGameNumber(gameNumber + 1);
       if (gameNumber === 3) {
-        setIsEndScore(true);
+        appState.setIsEndScore(true);
+
         setIsDraw(false);
         return;
       }
@@ -221,7 +226,7 @@ const GameScreen = () => {
         })}
         {isTicTacToe && <Alert name={player.toString()} okOnClick={onReset} />}
         {isDraw && <Alert2 message="It's a draw" okOnClick={onReset} />}
-        {isEndScore && (
+        {appState.isEndScore && (
           <Alert2
             message={`Congratulations, your endscore is ${appState.playerScore}!`}
             okOnClick={onNavigateToHighscores}

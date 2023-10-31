@@ -20,7 +20,8 @@ function NameForm() {
       });
     }
   };
-
+  const appState = useContext(AppStateContext);
+  appState.setPlayerScore(0);
   return (
     <div>
       <input
