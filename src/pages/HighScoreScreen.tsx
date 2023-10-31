@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import LabelBox from '../components/icons/Label';
 import { useContext, useEffect, useState } from 'react';
 import { AppStateContext } from '../AppStateContext';
+import HandleHighScores from '../helpers/grid/handleHighScores';
 //import { logEndScore } from '../helpers/grid/handelHighScores';
 
 const HighScoreScreen = () => {
@@ -12,9 +13,16 @@ const HighScoreScreen = () => {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [avoidDoubleScore, setAvoidDoubleScore] = useState(false);
+
   const onNavigateGoToStartScreen = () => {
     navigate('/');
   };
+  interface Highscore {
+    username: string;
+    score: number;
+  }
+
+  const highScores: Highscore[] = HandleHighScores() || [];
 
   function deleteHighscores() {
     setRefresh(true);
@@ -28,40 +36,7 @@ const HighScoreScreen = () => {
       setRefresh(false); // Reset the refresh state
     }
   }, [refresh]);
-
-  // Step 1: Load existing highscores from local storage
-
-  const existingHighscores: { username: string; score: number }[] = JSON.parse(
-    localStorage.getItem('highscores') || '[]',
-  );
-
-  // Step 2: Add the new highscore to the list
-  const newHighscore: { username: string; score: number } = {
-    username: appState.userName,
-    score: appState.endScore,
-  };
-
-  const updatedHighscores: { username: string; score: number }[] = [
-    ...existingHighscores,
-    newHighscore,
-  ];
-  console.log(updatedHighscores);
-
-  // Step 3: Sort the list in descending order based on endScore
-  updatedHighscores.sort((a, b) => b.score - a.score);
-  console.log(updatedHighscores);
-  // Step 4: Take the top 10 highscores
-  const top10Highscores: { username: string; score: number }[] = Array.from(
-    { length: 10 },
-    (_, index) => updatedHighscores[index] || { username: '', score: 0 },
-  );
-
-  // Step 5: Save the updated highscores back to local storage
-  if (!avoidDoubleScore) {
-    localStorage.setItem('highscores', JSON.stringify(top10Highscores));
-    console.log('yoyo man');
-  }
-  // Step 6: Render the highscores table (assuming React component)
+  // const executeHighScores = HandleHighScores();
 
   return (
     <div>
@@ -79,7 +54,7 @@ const HighScoreScreen = () => {
           </tr>
         </thead>
         <tbody>
-          {top10Highscores.map((score, index) => (
+          {highScores.map((score, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{score.username}</td>
