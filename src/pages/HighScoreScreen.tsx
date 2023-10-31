@@ -13,7 +13,6 @@ const HighScoreScreen = () => {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [avoidDoubleScore, setAvoidDoubleScore] = useState(false);
-
   const onNavigateGoToStartScreen = () => {
     navigate('/');
   };
