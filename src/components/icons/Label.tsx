@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import './Label.css';
 
 interface LabelBoxProps {
-  labelText: string;
+  labelRanking?: number;
+  labelText?: string;
+  labelScore?: number;
 }
-const LabelBox = ({ labelText }: LabelBoxProps) => {
+
+const LabelBox = ({ labelRanking, labelText, labelScore }: LabelBoxProps) => {
   return (
     <div className="label-box">
-      <div className="label-content">
-        <p>{labelText}</p>
-      </div>
+      <div className="ranking">{labelRanking}</div>
+      <div className="label-content">{labelText}</div>
+      <div className="score">{labelScore}</div>
     </div>
   );
 };

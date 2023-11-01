@@ -34,10 +34,23 @@ const HandleHighScores = () => {
   // Take the top 10 highscores
   const top10Highscores = filteredHighscores.slice(0, 10);
 
+  // Fill in missing positions with empty usernames and zero scores
+  while (top10Highscores.length < 10) {
+    top10Highscores.push({
+      username: '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0',
+      score: 0,
+    });
+  }
+  if (top10Highscores.length > 0 && top10Highscores[0].username.trim() === '') {
+    top10Highscores[0].username = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
+  }
   // Save the updated highscores back to local storage
   localStorage.setItem('highscores', JSON.stringify(top10Highscores));
 
-  return top10Highscores;
+  return top10Highscores.map((score, index) => ({
+    ...score,
+    ranking: index + 1,
+  }));
 };
 
 export default HandleHighScores;

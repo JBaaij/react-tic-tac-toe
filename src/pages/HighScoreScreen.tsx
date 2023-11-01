@@ -1,5 +1,4 @@
 import TitleComponent from '../components/TitleComponent';
-import './HighScoreScreen.css';
 import LabelButton from '../components/LabelButton';
 import { useNavigate } from 'react-router-dom';
 import LabelBox from '../components/icons/Label';
@@ -43,36 +42,31 @@ const HighScoreScreen = () => {
       <LabelBox labelText="High Scores" />
       <LabelBox labelText="Win: 2 points - - Draw: 1 point" />
       <LabelBox labelText="Ranking - - Name - - Points" />
-      <h2>Highscores</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Username</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {highScores.map((score, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{score.username}</td>
-              <td>{score.score}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <LabelButton
-        label={'Delete Highscores'}
-        onClick={deleteHighscores}
-        className="vscpu"
-      />
-      <LabelButton
-        label={'Go to Start'}
-        onClick={onNavigateGoToStartScreen}
-        className="vsplayer"
-      />
+      <div>
+        {highScores.map((score, index) => (
+          <div key={index}>
+            <LabelBox
+              labelRanking={index + 1}
+              labelText={score.username}
+              labelScore={score.score}
+            />
+          </div>
+        ))}
+      </div>
+      <div>
+        <LabelButton
+          label={'Delete Highscores'}
+          onClick={deleteHighscores}
+          className="vscpu"
+        />
+      </div>
+      <div>
+        <LabelButton
+          label={'Go to Start'}
+          onClick={onNavigateGoToStartScreen}
+          className="vsplayer"
+        />
+      </div>
     </div>
   );
 };

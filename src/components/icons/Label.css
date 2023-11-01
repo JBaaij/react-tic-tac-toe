@@ -5,7 +5,7 @@
   justify-content: center;
   background-color: rgba(16, 17, 16, 0.5); /* Semi-transparent background */
   margin: 5px auto; /* Adjust the margin values (top and bottom) */
-  width: 280px;
+  width: 220px;
   height: 20px;
   padding: 10px; /* Increase padding for better spacing */
   border-radius: 5px;
@@ -17,4 +17,12 @@
 .label-content {
   font-weight: 500; /* Make the text bold */
   font-size: 16px; /* Increase the font size as needed */
+}
+
+.ranking {
+  margin-right: auto; /* Adjust the right margin for spacing */
+}
+
+.score {
+  margin-left: auto; /* Adjust the left margin for spacing */
 }
