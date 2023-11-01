@@ -11,7 +11,6 @@ const HighScoreScreen = () => {
   const appState = useContext(AppStateContext);
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
-  const [avoidDoubleScore, setAvoidDoubleScore] = useState(false);
   const onNavigateGoToStartScreen = () => {
     navigate('/');
   };

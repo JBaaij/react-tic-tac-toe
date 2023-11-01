@@ -9,7 +9,7 @@ interface GridArguments {
   size: number;
 }
 
-export const createGrid = (args: GridArguments)=> {
+export const createGrid = (args: GridArguments) => {
   const { size } = args;
   return Array.from(Array(size), () => new Array(size).fill(0));
 };
@@ -56,8 +56,8 @@ export const getEmptyCells = (grid: number[][]) => {
     });
   });
   return emptyCells;
-}
+};
 
 export const isEmpty = (grid: number[][]) => {
   return grid.every((row) => row.every((cell) => cell === 0));
-}
+};
