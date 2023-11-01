@@ -18,6 +18,8 @@ interface AppStateContext {
   setPlayerScore: (score: number) => void;
   endScore: number;
   setEndScore: (score: number) => void;
+  avoidRerun: number;
+  setAvoidRerun: (score: number) => void;
 }
 // const [isEndScore, setIsEndScore] = useState(false);
 const AppStateContext = createContext<AppStateContext>({
@@ -33,6 +35,8 @@ const AppStateContext = createContext<AppStateContext>({
   setPlayerScore: () => {},
   endScore: 0,
   setEndScore: () => {},
+  avoidRerun: 1,
+  setAvoidRerun: () => {},
 });
 
 const AppStateProvider = ({
@@ -46,6 +50,7 @@ const AppStateProvider = ({
   const [isEndScore, setIsEndScore] = useState<boolean>(false);
   const [playerScore, setPlayerScore] = useState<number>(0);
   const [endScore, setEndScore] = useState<number>(0);
+  const [avoidRerun, setAvoidRerun] = useState<number>(1);
   return (
     <AppStateContext.Provider
       value={{
@@ -61,6 +66,8 @@ const AppStateProvider = ({
         setPlayerScore,
         endScore,
         setEndScore,
+        avoidRerun,
+        setAvoidRerun,
       }}>
       {children}
     </AppStateContext.Provider>

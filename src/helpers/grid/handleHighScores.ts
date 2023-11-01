@@ -1,54 +1,40 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppStateContext } from '../../AppStateContext';
-
 const HandleHighScores = () => {
   const appState = useContext(AppStateContext);
-  const [avoidRerun, setAvoidRerun] = useState(false);
+  const [avoidRerun, setAvoidRerun] = useState(1);
   console.log('is handle highscores called?');
 
   // Step 1: Load existing highscores from local storage
+  const existingHighscores = JSON.parse(
+    localStorage.getItem('highscores') || '[]',
+  );
 
-  if (!avoidRerun) {
-    var existingHighscores = JSON.parse(
-      localStorage.getItem('highscores') || '[]',
-    );
-    console.log('parsed');
-  } else {
-    existingHighscores = existingHighscores || [];
-    console.log('ik mis de parse');
-  }
-
-  // Step 2: Add the new highscore to the list
+  // Create a new high score object
   const newHighscore = {
     username: appState.userName,
     score: appState.endScore,
   };
 
-  if (avoidRerun) {
-    var updatedHighscores = [newHighscore, ...existingHighscores];
-    //updatedHighscores.shift();
-    console.log('trie tra trigger 2');
-  } else {
-    var updatedHighscores = [newHighscore, ...existingHighscores];
-    //updatedHighscores.shift();
-    console.log('trie tra trigger 1');
-    setAvoidRerun(true);
-  }
+  // Add the new high score to the existing highscores
+  const updatedHighscores = [...existingHighscores, newHighscore];
 
-  // Step 3: Sort the list in descending order based on endScore
-  updatedHighscores.sort((a, b) => b.score - a.score);
+  // Use filter to remove duplicates based on both username and score
+  const filteredHighscores = updatedHighscores.filter((score, index, self) => {
+    return (
+      self.findIndex(
+        (s) => s.username === score.username && s.score === score.score,
+      ) === index
+    );
+  });
 
-  // Step 4: Take the top 10 highscores
+  // Sort the array in descending order based on the score
+  filteredHighscores.sort((a, b) => b.score - a.score);
 
-  const top10Highscores = Array.from(
-    { length: 10 },
-    (_, index) => updatedHighscores[index] || { username: '', score: 0 },
-  );
-  const test = () => console.log('mijn god');
-  const test2 = test();
-  console.table(updatedHighscores);
-  console.table(top10Highscores);
-  // Step 5: Save the updated highscores back to local storage
+  // Take the top 10 highscores
+  const top10Highscores = filteredHighscores.slice(0, 10);
+
+  // Save the updated highscores back to local storage
   localStorage.setItem('highscores', JSON.stringify(top10Highscores));
 
   return top10Highscores;
