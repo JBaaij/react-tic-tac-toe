@@ -5,7 +5,6 @@ import LabelBox from '../components/icons/Label';
 import { useContext, useEffect, useState } from 'react';
 import { AppStateContext } from '../AppStateContext';
 import HandleHighScores from '../helpers/grid/handleHighScores';
-//import { logEndScore } from '../helpers/grid/handelHighScores';
 
 const HighScoreScreen = () => {
   const appState = useContext(AppStateContext);
@@ -23,24 +22,21 @@ const HighScoreScreen = () => {
 
   function deleteHighscores() {
     setRefresh(true);
-    // Optionally, you can reset the state to an empty array if needed
-    // setTop10Highscores([]);
   }
 
   useEffect(() => {
     if (refresh) {
       localStorage.removeItem('highscores');
-      setRefresh(false); // Reset the refresh state
+      setRefresh(false);
     }
   }, [refresh]);
-  // const executeHighScores = HandleHighScores();
 
   return (
     <div>
       <TitleComponent title={'High scores screen'} />
       <LabelBox labelText="High Scores" />
-      <LabelBox labelText="Win: 2 points - - Draw: 1 point" />
-      <LabelBox labelText="Ranking - - Name - - Points" />
+      <LabelBox labelText="Win: 2 points&nbsp;&nbsp;&nbsp;&nbsp;Draw: 1 point" />
+      <LabelBox labelText="Ranking&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Points" />
       <div>
         {highScores.map((score, index) => (
           <div key={index}>

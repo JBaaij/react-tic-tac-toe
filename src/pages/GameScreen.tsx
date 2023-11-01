@@ -25,7 +25,7 @@ const GameScreen = () => {
   const appState = useContext(AppStateContext);
   const [turnNumber, setTurnNumber] = useState(1);
   const [gameNumber, setGameNumber] = useState(1);
-  const [dummy, setDummy] = useState(false);
+  const [avoidDoubleMove, setAvoidDoubleMove] = useState(false); //When you are player 2 this variable helps avoiding a 2 times cpu move
 
   const onNavigateToHighscores = () => {
     appState.setEndScore(appState.playerScore);
@@ -177,12 +177,12 @@ const GameScreen = () => {
 
   useEffect(() => {
     if (!appState.playerVsPlayer) {
-      if (!isYourTurn(player) && !dummy) {
+      if (!isYourTurn(player) && !avoidDoubleMove) {
         doCPUMove(grid);
       }
 
-      if (!isYourTurn(player) && dummy) {
-        setDummy(false);
+      if (!isYourTurn(player) && avoidDoubleMove) {
+        setAvoidDoubleMove(false);
         switchPlayer();
       }
     }
@@ -194,13 +194,13 @@ const GameScreen = () => {
     setGrid(createGrid({ size: 3 }));
     setPlayer(appState.selectedChoice);
     if (!isYourTurn(player) && !appState.playerVsPlayer) {
-      setDummy(true);
+      setAvoidDoubleMove(true);
       doCPUMove(grid);
     }
 
     setIsTicTacToe(false);
   }, []);
-  // <IconX width={22} height={22} />
+
   return (
     <div>
       <CountBox labelText={`Gamenumber: ${gameNumber}`} />
