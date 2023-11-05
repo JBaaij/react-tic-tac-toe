@@ -28,6 +28,8 @@ const HighScoreScreen = () => {
     if (refresh) {
       localStorage.removeItem('highscores');
       setRefresh(false);
+      appState.setUserName('');
+      appState.setEndScore(0);
     }
   }, [refresh]);
 
